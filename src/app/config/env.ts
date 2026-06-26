@@ -36,7 +36,7 @@ export const env = {
     clientId: process.env.GOOGLE_CLIENT_ID ?? '',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     callbackUrl:
-      process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:5000/api/v1/auth/google/callback',
+      process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:5001/api/v1/auth/google/callback',
     // Where the browser lands after a successful Google login — the frontend
     // then calls /auth/refresh (cookie is already set) to get an access token.
     frontendRedirect:

@@ -12,7 +12,7 @@ const getMe =
     ) => {
       const user =
         await UserService.getMe(
-          req.user!.userId
+          (req.user as any).userId
         );
 
       sendResponse(res, {
@@ -36,9 +36,10 @@ const getMe =
       req: Request,
       res: Response
     ) => {
-      const user =
-        await UserService.updateMe(
-          req.user!.userId,
+
+      const userId = (req.user as any).userId;
+      const user =await UserService.updateMe(
+          userId,
           req.body
         );
 

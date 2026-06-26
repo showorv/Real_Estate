@@ -214,5 +214,6 @@ const register =
   login,
   refreshToken,
   logout,
-  googleLogin
+  googleLogin,
+  session,
 };
