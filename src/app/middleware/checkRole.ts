@@ -13,7 +13,8 @@ export function requireRole(...allowedRoles: UserRole[]) {
     if (!req.user) {
       throw new AppError(HTTP_STATUS.UNAUTHORIZED, 'Authentication required before role check');
     }
-    if (!allowedRoles.includes(req.user.role)) {
+    const userRole = (req.user as any).role;
+    if (!userRole || !allowedRoles.includes(userRole)) {
       throw new AppError(HTTP_STATUS.FORBIDDEN, `This action requires one of: ${allowedRoles.join(', ')}`);
     }
     next();

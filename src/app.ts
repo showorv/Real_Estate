@@ -8,7 +8,8 @@ import { env } from './app/config/env';
 import { notFound } from './app/middleware/notFound';
 import { globalError } from './app/middleware/globalErrorHandle';
 import { router } from './app/routers';
-
+import passport from "passport";
+import "./app/config/passport";
 
 export function createApp(): Application {
   const app = express();
@@ -24,6 +25,8 @@ export function createApp(): Application {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
   app.use(cookieParser());
+
+  app.use(passport.initialize());
 
   if (!env.isProduction) {
     app.use(morgan('dev'));

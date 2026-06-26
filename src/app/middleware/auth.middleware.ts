@@ -4,16 +4,17 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { AppError } from '../utils/apiError';
 import { HTTP_STATUS } from '../constraints/httpStatus';
-import { User } from '../constraints/user';
+import { AuthUser} from '../constraints/user';
 import { UserRole } from '../constraints/userRole';
+import { JwtPayload, verifyToken } from '../utils/auth.utils';
 
  
-interface AccessTokenPayload {
-  userID: string;
-  email: string;
-  role: UserRole;
-  type: 'access';
-}
+// interface AccessTokenPayload {
+//   userID: string;
+//   email: string;
+//   role: UserRole;
+//   type: 'access';
+// }
  
 export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   const header = req.headers.authorization;
@@ -25,13 +26,13 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   const token = header.slice('Bearer '.length).trim();
  
   try {
-    const payload = jwt.verify(token, env.jwt.accessSecret) as AccessTokenPayload;
+    const payload = verifyToken(token, env.jwt.accessSecret) as JwtPayload;
  
-    if (payload.type !== 'access') {
-      throw new AppError(HTTP_STATUS.UNAUTHORIZED, 'Invalid token type');
-    }
+    // if (payload.type !== 'access') {
+    //   throw new AppError(HTTP_STATUS.UNAUTHORIZED, 'Invalid token type');
+    // }
  
-    const user: User = { userId: payload.userID, email: payload.email, role: payload.role };
+    const user: AuthUser = { userId: payload.userId, email: payload.email, role: payload.role };
     req.user = user;
     next();
   } catch (err) {

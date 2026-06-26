@@ -15,6 +15,7 @@ const refreshTokenSchema =
       tokenHash: {
         type: String,
         required: true,
+         unique: true,
       },
 
       expiresAt: {
@@ -32,11 +33,11 @@ const refreshTokenSchema =
     }
   );
 
-  refreshTokenSchema.index(
+refreshTokenSchema.index({ tokenHash: 1 }, { unique: true });
+refreshTokenSchema.index({ userId: 1 });
+refreshTokenSchema.index(
   { expiresAt: 1 },
-  {
-    expireAfterSeconds: 0,
-  }
+  { expireAfterSeconds: 0 }
 );
 
 export const RefreshToken =
