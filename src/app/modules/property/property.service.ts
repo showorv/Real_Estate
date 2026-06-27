@@ -11,6 +11,8 @@ import {
 } from './property.interface';
 import { AppError } from '../../utils/apiError';
 import { AuthUser } from '../../constraints/user';
+import { ReviewModel } from '../review/review.model';
+import { Types } from 'mongoose';
 
 async function generateUniqueSlug(title: string): Promise<string> {
   const base = slugify(title, { lower: true, strict: true });
@@ -263,4 +265,31 @@ export async function getRelatedProperties(propertyId: string, limit = 4): Promi
     .limit(limit - related.length);
 
   return [...related, ...more];
+}
+
+export async function getApprovedPropertyById(id: string): Promise<IProperty> {
+  const property = await PropertyModel.findById(id);
+  if (!property) throw new AppError(HTTP_STATUS.NOT_FOUND, 'Property not found');
+  if (property.status !== 'approved') {
+    throw new AppError(HTTP_STATUS.BAD_REQUEST, 'You can only review an approved listing');
+  }
+  return property;
+}
+ 
+/**
+ * Owns the ratingAvg/reviewsCount invariant. review.service calls this after
+ * every create/delete so the cached stats never drift from the underlying
+ * Review documents -- review.service never imports PropertyModel directly,
+ * keeping the dependency direction one-way.
+ */
+export async function syncRatingStats(propertyId: string): Promise<void> {
+  const [stats] = await ReviewModel.aggregate([
+    { $match: { propertyId: new Types.ObjectId(propertyId) } },
+    { $group: { _id: null, avg: { $avg: '$rating' }, count: { $sum: 1 } } },
+  ]);
+ 
+  await PropertyModel.findByIdAndUpdate(propertyId, {
+    ratingAvg: stats ? Math.round(stats.avg * 10) / 10 : 0,
+    reviewsCount: stats ? stats.count : 0,
+  });
 }

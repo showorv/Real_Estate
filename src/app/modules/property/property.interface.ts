@@ -37,6 +37,7 @@ export interface ILocation {
 }
 
 export interface IProperty {
+  _id: Types.ObjectId;
   title: string;
   slug: string;
   description: string;

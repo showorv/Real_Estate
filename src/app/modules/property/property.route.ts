@@ -62,4 +62,4 @@ router.patch(
 
 router.delete('/:id', requireAuth, requireRole(UserRole.MANAGER, UserRole.ADMIN), propertyController.deleteProperty);
 
-export default router;
+export const propertyRouter = router;
