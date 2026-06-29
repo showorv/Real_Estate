@@ -5,6 +5,7 @@ import { userRoute } from "../modules/user/user.router";
 import { propertyRouter } from "../modules/property/property.route";
 import { reviewRouter } from "../modules/review/review.route";
 import { inquiryRouter } from "../modules/inquiry/inquiry.router";
+import { aiRouter } from "../modules/AI/ai.router";
 
 export const router = Router();
 
@@ -33,6 +34,10 @@ const moduleRouters = [
         path: "/inquiry",
         route: inquiryRouter
     },
+    {
+        path: "/AI",
+        route: aiRouter
+    }
 ]
 
 

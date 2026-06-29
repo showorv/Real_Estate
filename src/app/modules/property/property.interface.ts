@@ -151,6 +151,7 @@ export const listPropertiesQuerySchema = z.object({
       "oldest",
       "price_asc",
       "price_desc",
+      "newest",
     ])
     .optional(),
 });
